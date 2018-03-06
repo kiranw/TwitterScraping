@@ -1,9 +1,10 @@
 import json
-import pandas as pd
 import requests
 import sys
 import time
 import urllib.request
+
+import pandas as pd
 
 from selenium import webdriver
 from tqdm import tqdm
@@ -75,7 +76,7 @@ if __name__ == "__main__":
 
     open("data.csv", "a").close()
     # make sure we are not crawling for already saved user names
-    current_data = pd.read_csv("data.csv", delimiter=";", names=["username", "duplicate_candidates"],)
+    current_data = pd.read_csv("data.csv", delimiter=";", names=["username", "duplicate_candidates"])
     cached_usernames = set(current_data["username"].tolist())
     usernames = list(set(usernames) - cached_usernames)
 
