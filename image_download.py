@@ -31,7 +31,7 @@ def _save_image(url, path):
 
 if __name__ == "__main__":
 
-    current_data = pd.read_csv("data_syria.csv", dtype='str,str', delimiter=";", names=["username", "duplicate_candidates"])
+    current_data = pd.read_csv("data_maga.csv", dtype='str,str', delimiter=";", names=["username", "duplicate_candidates"])
     
     duplicate_candidates = {}
     # print(current_data.duplicate_candidates)
