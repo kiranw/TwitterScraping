@@ -33,11 +33,23 @@ def _logDuplicates(username, duplicates):
         s += "\n"
         f.write(s)
 
+
+def _my_proxy(PROXY_HOST, PROXY_PORT):
+        fp = webdriver.FirefoxProfile()
+        # Direct = 0, Manual = 1, PAC = 2, AUTODETECT = 4, SYSTEM = 5
+        fp.set_preference("network.proxy.type", 1)
+        fp.set_preference("network.proxy.http",PROXY_HOST)
+        fp.set_preference("network.proxy.http_port",int(PROXY_PORT))
+        fp.set_preference("general.useragent.override","whater_useragent")
+        fp.update_preferences()
+        return webdriver.Firefox(firefox_profile=fp)
+
 # crawl google reverse image search for the supplied Twitter usernames
 # returns a dictionary mapping one username to a set of potential other usernames
 def _crawl_users(usernames, max_no_pages=3, request_pause=0.5):
     # selenium driver
     parser = webdriver.Firefox()
+    # parser = _my_proxy("210.101.131.231", 8080)
 
     for username in tqdm(usernames):
         duplicate_candidates = set()
@@ -66,6 +78,7 @@ def _crawl_users(usernames, max_no_pages=3, request_pause=0.5):
                 break
 
         _logDuplicates(username, list(duplicate_candidates))
+        time.sleep(1000)
 
     parser.close()
 
