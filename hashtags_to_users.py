@@ -6,7 +6,7 @@ import json
 url = "https://dashboard.securingdemocracy.org/"
 # Content is generated in JavaScript, these are hashtags as of March 5, 6:45
 # top_hashtags = ["syria","ghouta","maga","russia","whitehelmets","qanon","eastghouta","us","damascus"]
-top_hashtags = ["maga","russia","whitehelmets","qanon","eastghouta","us","damascus"]
+top_hashtags = ["eastghouta","us","damascus"]
 trending_hashtags = ["nieuwsofnonsens","america","monday","toriesinsixwords","mondaymotivation","trumpttheestablishment","speak"]
 
 # Feed the hashtags to twitter_stream_download to get the usernames associated with tweets and their image URLs
