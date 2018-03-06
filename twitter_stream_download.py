@@ -28,19 +28,22 @@ def get_parser():
 class MyListener(StreamListener):
     """Custom StreamListener for streaming data."""
 
-    def __init__(self, data_dir, query):
+    def __init__(self, query):
         query_fname = format_filename(query)
-        self.outfile = "%s/stream_%s.json" % (data_dir, query_fname)
+        self.outfile = "%s/stream_%s.json" % ("hashtag_results", query_fname)
+        self.total = 0
 
     def on_data(self, data):
-        try:
-            with open(self.outfile, 'a') as f:
-                f.write(data)
-                print(data)
-                return True
-        except BaseException as e:
-            print("Error on_data: %s" % str(e))
-            time.sleep(5)
+        if self.total < 1000:
+            try:
+                with open(self.outfile, 'a') as f:
+                    f.write(data)
+                    print(data)
+                    self.total += 1
+                    return True
+            except BaseException as e:
+                print("Error on_data: %s" % str(e))
+                time.sleep(5)
         return True
 
     def on_error(self, status):
@@ -77,12 +80,13 @@ def parse(cls, api, raw):
     setattr(status, 'json', json.dumps(raw))
     return status
 
-if __name__ == '__main__':
-    parser = get_parser()
-    args = parser.parse_args()
+def run(query):
+    # parser = get_parser()
+    # args = parser.parse_args()
     auth = OAuthHandler(config.consumer_key, config.consumer_secret)
     auth.set_access_token(config.access_token, config.access_secret)
     api = tweepy.API(auth)
 
-    twitter_stream = Stream(auth, MyListener(args.data_dir, args.query))
-    twitter_stream.filter(track=[args.query])
+    twitter_stream = Stream(auth, MyListener(query))
+    twitter_stream.filter(track=[query])
+
