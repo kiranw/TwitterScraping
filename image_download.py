@@ -31,10 +31,14 @@ def _save_image(url, path):
 
 if __name__ == "__main__":
 
-    current_data = pd.read_csv("data.csv", delimiter=";", names=["username", "duplicate_candidates"])
+    current_data = pd.read_csv("data_syria.csv", dtype='str,str', delimiter=";", names=["username", "duplicate_candidates"])
     
     duplicate_candidates = {}
+    # print(current_data.duplicate_candidates)
     for _, row in current_data.iterrows():
+        # skip usernames with no duplicates
+        if type(row["duplicate_candidates"]) != str:
+            continue
         duplicate_candidates[row["username"]] = row["duplicate_candidates"].split(",")
 
     if not os.path.isdir("data"):
