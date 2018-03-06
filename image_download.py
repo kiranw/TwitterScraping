@@ -27,7 +27,7 @@ def _save_image(url, path):
     if r.status_code == 200:
         with open(path, "wb") as f:
             r.raw.decode_content = True
-            shutil.copyfileobj(r.raw, f)     
+            shutil.copyfileobj(r.raw, f)
 
 if __name__ == "__main__":
 
