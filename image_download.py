@@ -1,3 +1,4 @@
+import argparse
 import errno
 import json
 import os
@@ -31,7 +32,16 @@ def _save_image(url, path):
 
 if __name__ == "__main__":
 
-    current_data = pd.read_csv("data_maga.csv", dtype='str,str', delimiter=";", names=["username", "duplicate_candidates"])
+    parser = argparse.ArgumentParser(description='Download twitter profile pictures.')
+    parser.add_argument('path', metavar='PATH', type=str, nargs='+',
+                        help='path to csv data')
+
+    args = parser.parse_args()
+    path = args.path[0]
+
+    data_name = path.split("/")[-1].split(".")[0]
+
+    current_data = pd.read_csv(path, dtype='str,str', delimiter=";", names=["username", "duplicate_candidates"])
     
     duplicate_candidates = {}
     # print(current_data.duplicate_candidates)
@@ -41,11 +51,11 @@ if __name__ == "__main__":
             continue
         duplicate_candidates[row["username"]] = row["duplicate_candidates"].split(",")
 
-    if not os.path.isdir("data"):
-        _mkdir_p("data")
+    if not os.path.isdir(data_name):
+        _mkdir_p(data_name)
 
     for candidate in tqdm(duplicate_candidates):
-        path = "data/{}".format(candidate)
+        path = "{}/{}".format(data_name, candidate)
         
         # skip if pictures have already been loaded
         if os.path.isdir(path):
@@ -53,9 +63,9 @@ if __name__ == "__main__":
 
         # create folder with candidate name
         _mkdir_p(path)
-        _save_image(_username2url(candidate), "data/{}/{}.jpg".format(candidate, candidate))
+        _save_image(_username2url(candidate), "{}/{}/{}.jpg".format(data_name, candidate, candidate))
         # download [candidate name]/[candidate name].jpg
         for comparison in duplicate_candidates[candidate]:
             # download [candidate name]/[comparison name].jpg
-            _save_image(_username2url(comparison), "data/{}/{}.jpg".format(candidate, comparison))
-            time.sleep(0.5)
+            _save_image(_username2url(comparison), "{}/{}/{}.jpg".format(data_name, candidate, comparison))
+            time.sleep(0.1)

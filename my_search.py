@@ -58,14 +58,14 @@ def _my_proxy(proxy_domain, proxy_port=31280):
 
 # crawl google reverse image search for the supplied Twitter usernames
 # returns a dictionary mapping one username to a set of potential other usernames
-def _crawl_users(usernames, max_no_pages=3, request_pause=0.5):
+def _crawl_users(usernames, max_no_pages=3, request_pause=10):
     # selenium driver
-    # parser = webdriver.Firefox()
+    parser = webdriver.Firefox()
 
     # "us-wa.proxymesh.com"
 
-    parser = _my_proxy("fr.proxymesh.com")
-    fr_prox = True
+    # parser = _my_proxy("fr.proxymesh.com")
+    # fr_prox = True
 
     # time.sleep(10000)
 
@@ -94,19 +94,19 @@ def _crawl_users(usernames, max_no_pages=3, request_pause=0.5):
                         duplicate_user = url[20:20+end]
                     
                 duplicate_candidates.update([duplicate_user.lower()])
-            # time.sleep(np.random.uniform(request_pause - 0.25, request_pause + 0.25))
+            time.sleep(np.random.uniform(request_pause - 0.25, request_pause + 0.25))
 
             # only try to visit as many results pages as available
             nextPage = len(parser.find_elements_by_id("pnnext")) != 0
 
             # switch to second proxy with low prob.
-            if np.random.uniform(0,1) < 0.1:
-                parser.close()
+            # if np.random.uniform(0,1) < 0.1:
+            #     parser.close()
 
-                domain = "us-wa.proxymesh.com" if fr_prox else "fr.proxymesh.com"
-                fr_prox = not fr_prox
+            #     domain = "us-wa.proxymesh.com" if fr_prox else "fr.proxymesh.com"
+            #     fr_prox = not fr_prox
 
-                parser = _my_proxy(domain)
+            #     parser = _my_proxy(domain)
 
             if not nextPage:
                 break
